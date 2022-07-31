@@ -3,13 +3,13 @@ use crate::expr::Expr;
 use crate::utils;
 
 #[derive(Debug, PartialEq)]
-struct BindingDef {
+pub(crate) struct BindingDef {
     name: String,
     val: Expr,
 }
 
 impl BindingDef {
-    fn new(s: &str) -> Result<(&str, Self), String> {
+    pub(crate) fn new(s: &str) -> Result<(&str, Self), String> {
         let s = utils::tag("let", s)?;
         let (s, _) = utils::extract_whitespace1(s)?;
 
@@ -30,7 +30,7 @@ impl BindingDef {
         ))
     }
 
-    fn eval(&self, env: &mut Env) -> Result<(), String> {
+    pub(crate) fn eval(&self, env: &mut Env) -> Result<(), String> {
         env.store_binding(self.name.clone(), self.val.eval(env)?);
         Ok(())
     }

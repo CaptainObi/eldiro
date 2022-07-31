@@ -7,17 +7,17 @@ fn extract_op(s: &str) -> (&str, &str) {
     (&s[1..], &s[0..1])
 }
 
-fn extract_digits(s: &str) -> Result<(&str, &str), String> {
+pub(crate) fn extract_digits(s: &str) -> Result<(&str, &str), String> {
     take_while1(|c| c.is_ascii_digit(), s, "expected digits".to_string())
 }
 
 const WHITESPACE: &[char] = &[' ', '\n'];
 
-fn extract_whitespace(s: &str) -> (&str, &str) {
+pub(crate) fn extract_whitespace(s: &str) -> (&str, &str) {
     take_while(|c| WHITESPACE.contains(&c), s)
 }
 
-fn extract_whitespace1(s: &str) -> Result<(&str, &str), String> {
+pub(crate) fn extract_whitespace1(s: &str) -> Result<(&str, &str), String> {
     take_while1(
         |c| WHITESPACE.contains(&c),
         s,
@@ -25,7 +25,7 @@ fn extract_whitespace1(s: &str) -> Result<(&str, &str), String> {
     )
 }
 
-fn extract_ident(s: &str) -> Result<(&str, &str), String> {
+pub(crate) fn extract_ident(s: &str) -> Result<(&str, &str), String> {
     let input_starts_with_alphabetic = s
         .chars()
         .next()
@@ -50,7 +50,7 @@ fn take_while(accept: impl Fn(char) -> bool, s: &str) -> (&str, &str) {
     (remainder, extracted)
 }
 
-fn tag<'a, 'b>(starting_text: &'a str, s: &'b str) -> Result<&'b str, String> {
+pub(crate) fn tag<'a, 'b>(starting_text: &'a str, s: &'b str) -> Result<&'b str, String> {
     if let Some(stripped) = s.strip_prefix(starting_text) {
         Ok(stripped)
     } else {

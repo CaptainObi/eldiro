@@ -9,7 +9,7 @@ use self::binding_usage::BindingUsage;
 use self::block::Block;
 
 #[derive(Debug, PartialEq)]
-struct Number(i32);
+pub(crate) struct Number(pub(crate) i32);
 
 impl Number {
     fn new(s: &str) -> Result<(&str, Self), String> {
@@ -19,7 +19,7 @@ impl Number {
 }
 
 #[derive(Debug, PartialEq)]
-enum Op {
+pub(crate) enum Op {
     Add,
     Sub,
     Mul,
@@ -45,7 +45,7 @@ pub(crate) enum Expr {
 }
 
 impl Expr {
-    fn new(s: &str) -> Result<(&str, Self), String> {
+    pub(crate) fn new(s: &str) -> Result<(&str, Self), String> {
         Self::new_operation(s)
             .or_else(|_| Self::new_number(s))
             .or_else(|_| {
@@ -71,7 +71,7 @@ impl Expr {
         Number::new(s).map(|(s, number)| (s, Self::Number(number)))
     }
 
-    fn eval(&self, env: &Env) -> Result<Val, String> {
+    pub(crate) fn eval(&self, env: &Env) -> Result<Val, String> {
         match self {
             Self::Number(Number(n)) => Ok(Val::Number(*n)),
             Self::Operation { lhs, rhs, op } => {

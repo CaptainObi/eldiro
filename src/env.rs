@@ -9,11 +9,11 @@ pub(crate) struct Env<'parent> {
 }
 
 impl<'parent> Env<'parent> {
-    fn store_binding(&mut self, name: String, val: Val) {
+    pub(crate) fn store_binding(&mut self, name: String, val: Val) {
         self.bindings.insert(name, val);
     }
 
-    fn get_binding_value(&self, name: &str) -> Result<Val, String> {
+    pub(crate) fn get_binding_value(&self, name: &str) -> Result<Val, String> {
         self.get_binding_value_without_error_msg(name)
             .ok_or_else(|| format!("binding with name ‘{}’ does not exist", name))
     }
@@ -25,7 +25,7 @@ impl<'parent> Env<'parent> {
         })
     }
 
-    fn create_child(&'parent self) -> Self {
+    pub(crate) fn create_child(&'parent self) -> Self {
         Self {
             bindings: HashMap::new(),
             parent: Some(self),

@@ -4,12 +4,12 @@ use crate::utils;
 use crate::val::Val;
 
 #[derive(Debug, PartialEq)]
-struct Block {
+pub(crate) struct Block {
     stmts: Vec<Stmt>,
 }
 
 impl Block {
-    fn new(s: &str) -> Result<(&str, Self), String> {
+    pub(crate) fn new(s: &str) -> Result<(&str, Self), String> {
         let s = utils::tag("{", s)?;
         let (s, _) = utils::extract_whitespace(s);
 
@@ -30,7 +30,7 @@ impl Block {
         Ok((s, Block { stmts }))
     }
 
-    fn eval(&self, env: &Env) -> Result<Val, String> {
+    pub(crate) fn eval(&self, env: &Env) -> Result<Val, String> {
         if self.stmts.is_empty() {
             return Ok(Val::Unit);
         }
