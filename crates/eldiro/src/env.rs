@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use crate::val::Val;
 
 #[derive(PartialEq, Default, Debug)]
-pub(crate) struct Env<'parent> {
+pub struct Env<'parent> {
     bindings: HashMap<String, Val>,
     parent: Option<&'parent Self>,
 }

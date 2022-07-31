@@ -4,8 +4,8 @@ use crate::utils;
 
 #[derive(Debug, PartialEq)]
 pub(crate) struct BindingDef {
-    name: String,
-    val: Expr,
+    pub(crate) name: String,
+    pub(crate) val: Expr,
 }
 
 impl BindingDef {
