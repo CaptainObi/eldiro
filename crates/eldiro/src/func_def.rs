@@ -1,6 +1,6 @@
 use crate::{stmt::Stmt, utils};
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub(crate) struct FuncDef {
     pub(crate) name: String,
     pub(crate) params: Vec<String>,
@@ -39,7 +39,7 @@ impl FuncDef {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::expr::{Block, Expr};
+    use crate::expr::{BindingUsage, Block, Expr, Op};
 
     #[test]
     fn parse_func_def_with_no_params_and_empty_body() {
@@ -51,6 +51,44 @@ mod tests {
                     name: "nothing".to_string(),
                     params: Vec::new(),
                     body: Box::new(Stmt::Expr(Expr::Block(Block { stmts: Vec::new() })))
+                }
+            ))
+        )
+    }
+
+    #[test]
+    fn parse_func_def_with_one_param_and_empty_body() {
+        assert_eq!(
+            FuncDef::new("fn greet name => {}"),
+            Ok((
+                "",
+                FuncDef {
+                    name: "greet".to_string(),
+                    params: vec!["name".to_string()],
+                    body: Box::new(Stmt::Expr(Expr::Block(Block { stmts: Vec::new() })))
+                }
+            ))
+        )
+    }
+
+    #[test]
+    fn parse_func_def_with_multiple_params() {
+        assert_eq!(
+            FuncDef::new("fn add x y => x + y"),
+            Ok((
+                "",
+                FuncDef {
+                    name: "add".to_string(),
+                    params: vec!["x".to_string(), "y".to_string()],
+                    body: Box::new(Stmt::Expr(Expr::Operation {
+                        lhs: Box::new(Expr::BindingUsage(BindingUsage {
+                            name: "x".to_string(),
+                        })),
+                        rhs: Box::new(Expr::BindingUsage(BindingUsage {
+                            name: "y".to_string(),
+                        })),
+                        op: Op::Add,
+                    }))
                 }
             ))
         )
