@@ -2,6 +2,8 @@ use crate::env::Env;
 use crate::utils;
 use crate::val::Val;
 
+use super::func_call::FuncCall;
+
 #[derive(Debug, Clone, PartialEq)]
 pub(crate) struct BindingUsage {
     pub(crate) name: String,
@@ -20,7 +22,17 @@ impl BindingUsage {
     }
 
     pub(crate) fn eval(&self, env: &Env) -> Result<Val, String> {
-        env.get_binding(&self.name)
+        env.get_binding(&self.name).or_else(|error_msg| {
+            if env.get_func(&self.name).is_ok() {
+                FuncCall {
+                    callee: self.name.clone(),
+                    params: Vec::new(),
+                }
+                .eval(env)
+            } else {
+                Err(error_msg)
+            }
+        })
     }
 }
 
@@ -64,7 +76,7 @@ mod tests {
                 name: "i_dont_exist".to_string(),
             }
             .eval(&empty_env),
-            Err("binding with name ‘i_dont_exist’ does not exist".to_string()),
+            Err("binding with name `i_dont_exist` does not exist".to_string()),
         );
     }
 }

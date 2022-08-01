@@ -1,4 +1,4 @@
-use crate::{stmt::Stmt, utils};
+use crate::{stmt::Stmt, utils, Env};
 
 #[derive(Debug, Clone, PartialEq)]
 pub(crate) struct FuncDef {
@@ -17,6 +17,7 @@ impl FuncDef {
 
         let (s, params) = utils::sequence(
             |s| utils::extract_ident(s).map(|(s, ident)| (s, ident.to_string())),
+            utils::extract_whitespace,
             s,
         )?;
 
@@ -33,6 +34,11 @@ impl FuncDef {
                 body: Box::new(body),
             },
         ))
+    }
+
+    pub(crate) fn eval(&self, env: &mut Env) -> Result<(), String> {
+        env.store_func(self.name.clone(), self.params.clone(), *self.body.clone());
+        Ok(())
     }
 }
 

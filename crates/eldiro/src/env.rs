@@ -51,13 +51,13 @@ impl<'parent> Env<'parent> {
     pub(crate) fn get_binding(&self, name: &str) -> Result<Val, String> {
         self.get_named_info(name)
             .and_then(NamedInfo::into_binding)
-            .ok_or_else(|| format!("binding with name '{}' does not exist", name))
+            .ok_or_else(|| format!("binding with name `{}` does not exist", name))
     }
 
     pub(crate) fn get_func(&self, name: &str) -> Result<(Vec<String>, Stmt), String> {
         self.get_named_info(name)
             .and_then(NamedInfo::into_func)
-            .ok_or_else(|| format!("function with name '{}' does not exist", name))
+            .ok_or_else(|| format!("function with name `{}` does not exist", name))
     }
 
     fn get_named_info(&self, name: &str) -> Option<NamedInfo> {
